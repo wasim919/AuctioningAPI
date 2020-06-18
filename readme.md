@@ -1,6 +1,6 @@
-# Team Messaging App
+# Auction Site
 
-> The purpose of this app is to allow communication b/w people within an organisation.
+> The purpose of this app is to provide an auctioning platform for the people
 
 ## Usage
 
@@ -21,11 +21,5 @@ npm install
 > Run in production mode:
 
 - npm start
-
-## You can find the documentation of the API at:
-
-> https://documenter.getpostman.com/view/10666268/SzzhcxrA?version=latest
-
-On setting up the api on the local machine, the index page will display all the use cases that the api supports.
 
 - Version 1.0.0
