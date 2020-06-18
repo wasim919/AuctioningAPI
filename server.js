@@ -24,8 +24,8 @@ connectDB();
 
 // Route files
 const auth = require('./routes/auth');
-const posts = require('./routes/bids');
-const channels = require('./routes/auctionitems');
+const bids = require('./routes/bids');
+const auctionitems = require('./routes/auctionitems');
 const users = require('./routes/user');
 
 const app = express();

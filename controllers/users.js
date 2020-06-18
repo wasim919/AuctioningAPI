@@ -1,6 +1,6 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const Channel = require('../models/Channel');
+const AuctionItem = require('../models/AuctionItem');
 const User = require('../models/User');
 
 // @desc        Get all users
@@ -57,10 +57,10 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc            Get channel corresponding to a specific user
-// @route           Get /api/v1/users/channels/:userId
+// @desc            Get AuctionItem corresponding to a specific user
+// @route           Get /api/v1/users/auctionitems/:userId
 // @access          Private
-exports.getUserChannel = asyncHandler(async (req, res, next) => {
+exports.getUserAuctionItem = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   if (!user) {
     return new ErrorResponse(`User not found`, 400);
@@ -71,15 +71,15 @@ exports.getUserChannel = asyncHandler(async (req, res, next) => {
       401
     );
   }
-  const channels = await Channel.find({ user: req.user.id });
-  if (!channels) {
+  const auctionitems = await AuctionItem.find({ user: req.user.id });
+  if (!auctionitems) {
     return new ErrorResponse(
-      `User with id: ${req.params.id} has not created any channel yet`,
+      `User with id: ${req.params.id} has not created any auction item yet`,
       404
     );
   }
   res.status(200).json({
     success: true,
-    data: channels,
+    data: auctionitems,
   });
 });

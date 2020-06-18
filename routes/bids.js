@@ -24,14 +24,14 @@ router
       path: 'auctionitem',
       select: 'name description',
     }),
-    getPosts
+    getBids
   )
-  .post(protect, createPost);
+  .post(protect, createBid);
 
 router
   .route('/:id')
-  .get(getPost)
-  .put(protect, updatePost)
-  .delete(protect, deletePost);
+  .get(getBid)
+  .put(protect, updateBid)
+  .delete(protect, deleteBid);
 
 module.exports = router;

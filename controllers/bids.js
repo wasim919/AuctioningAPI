@@ -7,7 +7,7 @@ const ErrorResponse = require('../utils/errorResponse');
 // @route       GET /api/v1/bids
 // @route       GET /api/v1/auctionitems/:auctionitemId/bids
 // @access      Private
-exports.getbids = asyncHandler(async (req, res, next) => {
+exports.getBids = asyncHandler(async (req, res, next) => {
   if (req.params.auctionitemId) {
     const bids = await Bid.find({
       auctionitem: req.params.auctionitemId,
@@ -26,7 +26,7 @@ exports.getbids = asyncHandler(async (req, res, next) => {
 // @desc        Add bid specific to an auction item
 // @route       POST /api/v1/auctionitems/:auctionitemId/posts
 // @access      Private
-exports.createBids = asyncHandler(async (req, res, next) => {
+exports.createBid = asyncHandler(async (req, res, next) => {
   req.body.auctionitem = req.params.auctionitemId;
   req.body.user = req.user;
   const auctionitem = await AuctionItem.findById(req.params.auctionitemId);

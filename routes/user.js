@@ -5,7 +5,7 @@ const {
   createUser,
   updateUser,
   deleteUser,
-  getUserChannel,
+  getUserAuctionItem,
 } = require('../controllers/users');
 const User = require('../models/User');
 
@@ -15,7 +15,7 @@ const advancedResults = require('../middleware/advancedResults');
 const { protect, authorize } = require('../middleware/auth');
 
 router.use(protect);
-router.route('/channels/:id').get(getUserChannel);
+router.route('/auctionitems/:id').get(getUserAuctionItem);
 
 router.use(authorize('admin'));
 

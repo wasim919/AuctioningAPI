@@ -16,15 +16,15 @@ const AuctionItemSchema = new mongoose.Schema({
   },
   startTime: {
     type: Date,
-    required: [True, 'Please add a start time'],
+    required: [true, 'Please add a start time'],
   },
   endTime: {
     type: Date,
-    required: [True, 'Pleaseadd an end time'],
+    required: [true, 'Pleaseadd an end time'],
   },
   startingAmount: {
     type: Number,
-    required: [True, 'Please add a starting amount'],
+    required: [true, 'Please add a starting amount'],
   },
   winner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -34,10 +34,5 @@ const AuctionItemSchema = new mongoose.Schema({
     type: String,
   },
 });
-
-// // Cascade delete courses when a bootcamp is deleted
-// ChannelSchema.pre('remove', async function (next) {
-//   await this.model('Course').deleteMany({ channel: this._id });
-// });
 
 module.exports = mongoose.model('AuctionItemSchema', AuctionItemSchema);
