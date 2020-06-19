@@ -21,10 +21,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: 'user',
   },
-  region: {
-    type: String,
-    required: [true, 'Please add a region'],
-  },
   password: {
     type: String,
     required: [true, 'Please add a password'],

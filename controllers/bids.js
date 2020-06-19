@@ -3,19 +3,19 @@ const Bid = require('../models/Bid');
 const AuctionItem = require('../models/AuctionItem');
 const ErrorResponse = require('../utils/errorResponse');
 
-// @desc        Get single bid
+// @desc        Get bids
 // @route       GET /api/v1/bids
 // @route       GET /api/v1/auctionitems/:auctionitemId/bids
 // @access      Private
 exports.getBids = asyncHandler(async (req, res, next) => {
-  if (req.params.auctionitemId) {
+  if (req.params.auctionItemId) {
     const bids = await Bid.find({
-      auctionitem: req.params.auctionitemId,
+      auctionitem: req.params.auctionItemId,
     });
 
     res.status(200).json({
       success: true,
-      count: bidss.length,
+      count: bids.length,
       data: bids,
     });
   } else {
@@ -27,14 +27,30 @@ exports.getBids = asyncHandler(async (req, res, next) => {
 // @route       POST /api/v1/auctionitems/:auctionitemId/posts
 // @access      Private
 exports.createBid = asyncHandler(async (req, res, next) => {
-  req.body.auctionitem = req.params.auctionitemId;
+  req.body.auctionitem = req.params.auctionItemId;
   req.body.user = req.user;
-  const auctionitem = await AuctionItem.findById(req.params.auctionitemId);
+
+  const auctionitem = await AuctionItem.findById(req.params.auctionItemId);
   if (!auctionitem) {
     next(
       new ErrorResponse(
         `auction item does not exist with id of ${req.params.channelId}`,
         404
+      )
+    );
+  }
+  if (auctionitem.endTime < Date.now()) {
+    return next(
+      new ErrorResponse(`The auction for this item is over now.`, 400)
+    );
+  }
+  // Check if the entered amount is less than the auction item starting amount
+  console.log(auctionitem.startingAmount);
+  if (req.body.bidAmount < auctionitem.startingAmount) {
+    return next(
+      new ErrorResponse(
+        `The bid amount ${req.body.bidAmount} is less than the base auction item amount ${auctionitem.startingAmount}`,
+        400
       )
     );
   }

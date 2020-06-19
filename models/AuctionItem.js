@@ -20,26 +20,29 @@ const AuctionItemSchema = new mongoose.Schema({
   },
   endTime: {
     type: Date,
-    required: [true, 'Please add an end time'],
   },
   startingAmount: {
     type: Number,
     required: [true, 'Please add a starting amount'],
   },
+  amount: {
+    type: Number,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+  },
   winner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+  },
+  winnerBid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Bid',
   },
   imageUrl: {
     type: String,
   },
 });
 
-AuctionItemSchema.pre('save', function () {
-  if (this.endTime > this.startTime) {
-    next();
-  }
-  console.log("End time can't be the same as the start time");
-});
-
-module.exports = mongoose.model('AuctionItemSchema', AuctionItemSchema);
+module.exports = mongoose.model('AuctionItem', AuctionItemSchema);

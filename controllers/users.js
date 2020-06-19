@@ -65,12 +65,15 @@ exports.getUserAuctionItem = asyncHandler(async (req, res, next) => {
   if (!user) {
     return new ErrorResponse(`User not found`, 400);
   }
-  if (req.user.id !== user.id.toString()) {
+  console.log(req.user.id);
+  console.log(user._id.toString());
+  if (req.user.id !== user._id.toString()) {
     return new ErrorResponse(
       `User with id: ${req.params.id} is not authorized to access this channel`,
       401
     );
   }
+  console.log('hello');
   const auctionitems = await AuctionItem.find({ user: req.user.id });
   if (!auctionitems) {
     return new ErrorResponse(

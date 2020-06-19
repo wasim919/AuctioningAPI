@@ -21,7 +21,7 @@ router
   .route('/')
   .get(
     advancedResults(Bid, {
-      path: 'auctionitem',
+      path: 'auctionitems',
       select: 'name description',
     }),
     getBids
