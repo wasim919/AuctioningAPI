@@ -3,6 +3,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Bid = require('../models/Bid');
 const User = require('../models/User');
+const nodemailer = require('nodemailer');
 
 // @desc            Get all auctionitems
 // @route           GET /api/v1/auctionitems
@@ -143,26 +144,76 @@ exports.sendEmail = asyncHandler(async (req, res, next) => {
     );
   }
   const bidsForItem = await Bid.find({ auctionitem: req.params.auctionItemId });
+  const winnerUser = await User.findById(auctionitem.winner);
   const usersBidded = bidsForItem.map((el) => el.user);
   const userEmails = getUserEmails(usersBidded);
-  // const bid = await Bid.findById(req.params.id).populate({
-  //   path: 'channel',
-  //   select: 'name description',
+  // console.log(await userEmails);
+  // var userEmailsUnique = (await userEmails).filter(function (item, index) {
+  //   return userEmails.indexOf(item) >= index;
   // });
-  // if (!bid) {
-  //   return next(new ErrorResponse(`No bid with id of ${req.params.id}`, 404));
-  // }
+
+  // Send mail to winner
+  const winnerMessage = `Congratulations your bid for item ${auctionitem.name} has been successful`;
+  sendEmailToUser(winnerUser.email, winnerMessage);
+
+  // Send mail to other users who bidded for the item
+  for (let i = 0; i < (await userEmails).length; ++i) {
+    let email = (await userEmails)[i].email;
+    if (email != winnerUser.email) {
+      const message = `You are receiving this email because your bid was not successfull`;
+      sendEmailToUser(email, message);
+    }
+  }
   res.status(200).json({
     success: true,
-    data: {},
   });
 });
+
+const sendEmailToUser = async (email, message) => {
+  try {
+    await sendMail({
+      email: email,
+      subject: 'Thanks for dealing with us',
+      message,
+    });
+    return res.status(200).json({
+      success: true,
+      data: 'Email sent',
+    });
+  } catch (error) {
+    console.log(error);
+
+    return next(new ErrorResponse('Email could not be sent', 500));
+  }
+};
+
+const sendMail = async (options) => {
+  let transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+      user: process.env.SMTP_EMAIL,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+
+  const message = {
+    from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
+    to: options.email,
+    subject: options.subject,
+    text: options.message,
+  };
+  const info = await transporter.sendMail(message);
+
+  console.log('Message sent: %s', info.messageId);
+};
 
 const getUserEmails = async (usersBidded) => {
   const userEmails = [];
   for (let i = 0; i < usersBidded.length; ++i) {
     userEmails[i] = await User.findOne(usersBidded[i]).select('email');
   }
+  return userEmails;
 };
 
 const findMax = (bids) => {
