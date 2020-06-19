@@ -1,6 +1,6 @@
 # Auction Site
 
-> The purpose of this app is to provide an auctioning platform for the people
+> The purpose of this app is to provide a back-end auctioning API.
 
 ## Usage
 
