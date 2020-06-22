@@ -25,7 +25,7 @@ router.use('/:auctionItemId/bids', bidsRouter);
 
 router
   .route('/')
-  .get(advancedResults(AuctionItem, 'bids'), getAuctionItems)
+  .get(advancedResults(AuctionItem, 'bids, User'), getAuctionItems)
   .post(protect, createAuctionItem);
 
 router

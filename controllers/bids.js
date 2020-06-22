@@ -39,21 +39,41 @@ exports.createBid = asyncHandler(async (req, res, next) => {
       )
     );
   }
-  if (auctionitem.endTime < Date.now()) {
+
+  // Check if user has already bidded for the auction item
+  const userBid = await Bid.findOne({ user: req.user.id });
+  if (userBid) {
+    return next(
+      new ErrorResponse(`You have already bidded for this item.`, 400)
+    );
+  }
+
+  let currentDateTime = new Date();
+  if (auctionitem.endingBidDateTime < currentDateTime) {
     return next(
       new ErrorResponse(`The auction for this item is over now.`, 400)
     );
   }
   // Check if the entered amount is less than the auction item starting amount
-  console.log(auctionitem.startingAmount);
-  if (req.body.bidAmount < auctionitem.startingAmount) {
+  if (req.body.bidAmount < auctionitem.startingBidAmount) {
     return next(
       new ErrorResponse(
-        `The bid amount ${req.body.bidAmount} is less than the base auction item amount ${auctionitem.startingAmount}`,
+        `The bid amount ${req.body.bidAmount} is less than the base auction item amount ${auctionitem.startingBidAmount}`,
         400
       )
     );
   }
+
+  // User who auctioned the item can't bid for it
+  if (auctionitem.user.toString() === req.user.id) {
+    return next(
+      new ErrorResponse(
+        `You can't bid for the item that you have auctioned`,
+        400
+      )
+    );
+  }
+
   const bid = await Bid.create(req.body);
 
   res.status(200).json({

@@ -14,18 +14,19 @@ const AuctionItemSchema = new mongoose.Schema({
     trim: true,
     maxlength: [500, 'Description cannot be more than 500 characters'],
   },
-  startTime: {
+  startDateTime: {
     type: Date,
     default: Date.now,
   },
-  endTime: {
+  endingBidDateTime: {
     type: Date,
+    required: [true, 'Please add an end time'],
   },
-  startingAmount: {
+  startingBidAmount: {
     type: Number,
-    required: [true, 'Please add a starting amount'],
+    required: [true, 'Please add a starting bid amount'],
   },
-  amount: {
+  finalBidAmount: {
     type: Number,
   },
   user: {
@@ -43,6 +44,13 @@ const AuctionItemSchema = new mongoose.Schema({
   imageUrl: {
     type: String,
   },
+});
+
+AuctionItemSchema.pre('save', function () {
+  this.startingBidDateTime = new Date();
+  this.endingBidDateTime = new Date(this.endDateTime);
+  console.log(this.endingBidDateTime);
+  next();
 });
 
 module.exports = mongoose.model('AuctionItem', AuctionItemSchema);
