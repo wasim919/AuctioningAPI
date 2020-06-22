@@ -175,7 +175,7 @@ exports.sendEmail = asyncHandler(async (req, res, next) => {
     await sendMail({
       email: winnerUser.email,
       subject: 'Thanks for dealing with us',
-      winnerMessage,
+      message: winnerMessage,
     });
   } catch (error) {
     console.log(error);
@@ -192,7 +192,7 @@ exports.sendEmail = asyncHandler(async (req, res, next) => {
         await sendMail({
           email: email,
           subject: 'Thanks for dealing with us',
-          message,
+          message: message,
         });
       } catch (error) {
         console.log(error);
